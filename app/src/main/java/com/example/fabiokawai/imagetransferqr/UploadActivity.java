@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -25,11 +26,14 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import java.io.IOException;
+
 import static com.example.fabiokawai.imagetransferqr.MainActivity.mFirebaseDatabase;
 
 public class UploadActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_SELECTION = 2;
 
     private BitmapConverter converter;
 
@@ -112,7 +116,8 @@ public class UploadActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
             qrSize = layout.getWidth() - 100;
             Bundle extras = data.getExtras();
@@ -124,8 +129,27 @@ public class UploadActivity extends AppCompatActivity {
 
             keyValue = mImageQrDatabaseReference.push().getKey();
             mImageQrDatabaseReference.child(keyValue).setValue(img);
+        }
+
+        if (requestCode == REQUEST_IMAGE_SELECTION && resultCode == RESULT_OK){
+            qrSize = layout.getWidth() - 100;
+            Bundle extras = data.getExtras();
+            Uri uri = data.getData();
+            Bitmap imageBitmap = null;
+            try {
+                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Image img = new Image(converter.bitmapToString(imageBitmap));
+            mImageQrDatabaseReference = mFirebaseDatabase.getReference().child("qrMessage");
+
+            keyValue = mImageQrDatabaseReference.push().getKey();
+            mImageQrDatabaseReference.child(keyValue).setValue(img);
 
         }
+
     }
 
     private Bitmap encodeAsBitmap(String source, int width, int height) {
@@ -173,6 +197,11 @@ public class UploadActivity extends AppCompatActivity {
                     if (takePhotoIntent.resolveActivity(getPackageManager()) != null){
                         startActivityForResult(takePhotoIntent, REQUEST_IMAGE_CAPTURE);
                     }
+                }
+                if (selected == 1){
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, REQUEST_IMAGE_SELECTION);
                 }
 
             }
