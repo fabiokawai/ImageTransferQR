@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void downloadClick(View view) {
-        //CLIQUE NO BOTAO DOWNLOAD
+        Intent i = new Intent(this, DownloadActivity.class);
+        startActivity(i);
     }
 }
