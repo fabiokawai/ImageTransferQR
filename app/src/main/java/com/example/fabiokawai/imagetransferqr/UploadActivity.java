@@ -49,7 +49,6 @@ public class UploadActivity extends AppCompatActivity {
     private ImageView qrImageView;
     private LinearLayout layout;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +57,6 @@ public class UploadActivity extends AppCompatActivity {
         txtKey = (TextView) findViewById(R.id.txtKey);
         qrImageView = (ImageView) findViewById(R.id.qrImageView);
         layout = (LinearLayout) findViewById(R.id.linearLayout);
-
 
         mImageQrDatabaseReference = mFirebaseDatabase.getReference().child("qrMessage");
 
@@ -109,11 +107,7 @@ public class UploadActivity extends AppCompatActivity {
 
         showUploadOptions();
 
-
-
-
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -191,7 +185,7 @@ public class UploadActivity extends AppCompatActivity {
         builder.setItems(saveOptions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int selected) {
-                // the user clicked on colors[which]
+
                 if (selected == 0){
                     Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     if (takePhotoIntent.resolveActivity(getPackageManager()) != null){
