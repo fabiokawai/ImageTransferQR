@@ -72,13 +72,6 @@ public class UploadActivity extends AppCompatActivity {
                 qrImageView.setImageBitmap(qrImage);
 
 
-                /*
-
-                Add to ImageView
-
-                Save to Camera Roll
-
-                 */
             }
 
             @Override
