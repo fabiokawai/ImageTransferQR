@@ -9,7 +9,7 @@ import java.io.ByteArrayOutputStream;
 
 public class BitmapConverter {
 
-    public Bitmap StringToBitmap(String image){
+    public Bitmap stringToBitmap(String image){
         try{
             byte [] encodeByte=Base64.decode(image,Base64.DEFAULT);
             Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
